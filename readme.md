@@ -13,7 +13,6 @@ export G_LOG_FILE=""
 # App config env:
 
 ```
-source ./.env.sh
 export APP_NAME=""
 export APP_DB_PATH=""
 export APP_DB_BACKUP_BUCKET=""
