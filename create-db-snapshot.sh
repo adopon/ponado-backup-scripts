@@ -1,8 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-source ./.env.sh
-source ./.env.app.sh
+# sourcing for debug purposes
+# it should be sourced in wrapper script
+
+# source .env.sh
+# source .env.app.sh
 
 # --- VALIDATION ---
 if [ -z "${G_AGE_RECIPIENT:-}" ]; then

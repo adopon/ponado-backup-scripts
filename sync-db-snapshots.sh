@@ -1,16 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
-source ./.env.sh
-source ./.env.app.sh
+# sourcing for debug purposes
+# it should be sourced in wrapper script
+
+# source .env.sh
+# source .env.app.sh
 
 # --- VALIDATION ---
-if [ -z "${G_RCLONE_BACKUP_REMOTE_NAME:-}" ]; then
-    echo "ERROR: G_RCLONE_BACKUP_REMOTE_NAME is not set"
+if [ -z "${APP_RCLONE_BACKUP_REMOTE:-}" ]; then
+    echo "ERROR: APP_RCLONE_BACKUP_REMOTE is not set"
     exit 1
 fi
-if [ -z "${APP_BACKUP_DB_BUCKET:-}" ]; then
-    echo "ERROR: APP_BACKUP_DB_BUCKET is not set"
+if [ -z "${APP_DB_BACKUP_BUCKET:-}" ]; then
+    echo "ERROR: APP_DB_BACKUP_BUCKET is not set"
     exit 1
 fi
 
@@ -24,12 +27,12 @@ if [ ! -d "$G_LOCAL_DB_BACKUP_DIR" ]; then
     exit 1
 fi
 
-echo "[$(date)] Starting Rclone Sync: $G_LOCAL_DB_BACKUP_DIR -> $G_RCLONE_BACKUP_REMOTE_NAME:$G_RCLONE_BACKUP_BUCKET_DB_NAME/" | tee -a "$G_LOG_FILE"
+echo "[$(date)] Starting Rclone Sync: $G_LOCAL_DB_BACKUP_DIR -> $APP_RCLONE_BACKUP_REMOTE:$APP_DB_BACKUP_BUCKET/" | tee -a "$G_LOG_FILE"
 
 # 1. Sync files to B2/S3 using rclone
 # --include "*.age" ensures only encrypted files go up.
 # --fast-list reduces API calls (saves money/time).
-rclone sync "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" "$G_RCLONE_BACKUP_REMOTE_NAME:$APP_BACKUP_DB_BUCKET/" \
+rclone sync "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" "$APP_RCLONE_BACKUP_REMOTE:$APP_DB_BACKUP_BUCKET/" \
     --include "*.age" \
     --fast-list \
     --verbose
