@@ -1,7 +1,21 @@
 #!/bin/bash
+set -euo pipefail
 
 source ./.env.sh
 source ./.env.app.sh
+
+# --- VALIDATION ---
+if [ -z "${G_AGE_RECIPIENT:-}" ]; then
+    echo "ERROR: G_AGE_RECIPIENT is not set"
+    exit 1
+fi
+if [ -z "${APP_DB_PATH:-}" ]; then
+    echo "ERROR: APP_DB_PATH is not set"
+    exit 1
+fi
+
+# Create log directory if needed
+mkdir -p "$(dirname "$G_LOG_FILE")"
 
 # Naming
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
@@ -19,9 +33,4 @@ sqlite3 "$APP_DB_PATH" .dump | \
 gzip -c | \
 age -r "$G_AGE_RECIPIENT" -o "$LOCAL_FILE"
 
-if [ $? -eq 0 ]; then
-    echo "Backup saved to $LOCAL_FILE"
-else
-    echo "Backup failed!"
-    exit 1
-fi
+echo "[$(date)] SUCCESS: Backup saved to $LOCAL_FILE" | tee -a "$G_LOG_FILE"

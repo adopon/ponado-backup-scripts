@@ -1,7 +1,8 @@
 #!/bin/bash
+set -euo pipefail
 
-source .env.sh
-source .env.app.sh
+source ./.env.sh
+source ./.env.app.sh
 
 # --- CONFIGURATION ---
 SOURCE="$G_RCLONE_LOCAL_REMOTE_NAME:$APP_RCLONE_LOCAL_BUCKET"
