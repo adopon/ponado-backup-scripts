@@ -7,6 +7,8 @@ set -euo pipefail
 # source .env.sh
 # source .env.app.sh
 
+FILE_MATCHER="*.sql.gz"
+
 # --- VALIDATION ---
 if [ -z "${APP_RCLONE_BACKUP_REMOTE:-}" ]; then
     echo "ERROR: APP_RCLONE_BACKUP_REMOTE is not set"
@@ -33,7 +35,7 @@ echo "[$(date)] Starting Rclone Sync: $G_LOCAL_DB_BACKUP_DIR -> $APP_RCLONE_BACK
 # --include "*.age" ensures only encrypted files go up.
 # --fast-list reduces API calls (saves money/time).
 rclone sync "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" "$APP_RCLONE_BACKUP_REMOTE:$APP_DB_BACKUP_BUCKET/" \
-    --include "*.age" \
+    --include "$FILE_MATCHER" \
     --fast-list \
     --verbose
 
@@ -41,6 +43,6 @@ echo "[$(date)] Sync to remote completed successfully." | tee -a "$G_LOG_FILE"
 
 # 2. Local Cleanup
 echo "[$(date)] Cleaning up local files older than $G_RETENTION_DAYS days..." | tee -a "$G_LOG_FILE"
-find "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" -type f -name "*.age" -mtime +"$G_RETENTION_DAYS" -delete
+find "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" -type f -name "$FILE_MATCHER" -mtime +"$G_RETENTION_DAYS" -delete
 
 echo "[$(date)] Maintenance complete." | tee -a "$G_LOG_FILE"
