@@ -12,3 +12,4 @@ export APP_RCLONE_LOCAL_REMOTE=""
 export APP_RCLONE_BACKUP_REMOTE="" 
 # *.sql.gz, tar.gz and etc
 export FILE_PATTERN=""
+export FILE_EXTENSION=""
