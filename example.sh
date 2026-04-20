@@ -4,7 +4,7 @@
 source ./.env.sh
 source ./.env.<app-name>.sh
 
-# creating local encrypted and gzipped snapshot of db
+# creating local gzipped snapshot of db
 ./create-db-snapshot.sh
 
 # syncing it to remote s3 bucket

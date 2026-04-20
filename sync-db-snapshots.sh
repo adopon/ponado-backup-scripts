@@ -36,7 +36,8 @@ echo "[$(date)] Starting Rclone Sync: $G_LOCAL_DB_BACKUP_DIR -> $APP_RCLONE_BACK
 rclone sync "$G_LOCAL_DB_BACKUP_DIR/$APP_NAME" "$APP_RCLONE_BACKUP_REMOTE:$APP_DB_BACKUP_BUCKET/" \
     --include "$FILE_PATTERN" \
     --fast-list \
-    --verbose
+    --verbose \
+    --b2-hard-delete 
 
 echo "[$(date)] Sync to remote completed successfully." | tee -a "$G_LOG_FILE"
 
